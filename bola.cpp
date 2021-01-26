@@ -14,11 +14,16 @@ Bola::Bola(float posX, float posY, float velX, float velY)
 
     vida = vidaInicial;
     padre = NULL;
+    imagen = QImage("./png/abrupt-boy-face.png");
+    imagen = imagen.scaled(Bola::diametro, Bola::diametro);
+    mostrarImagen = true;
 }
 
 Bola::Bola(){
     padre = NULL;
-    vida = vidaInicial;
+    imagen = QImage("./png/abrupt-boy-face.png");
+    imagen = imagen.scaled(Bola::diametro, Bola::diametro);
+    mostrarImagen = true;
 }
 
 void Bola::mover(int ancho, int alto){
@@ -50,6 +55,11 @@ void Bola::pintar(QPainter &pintor){
 
     if (vida < 0)
         vida = 0;
+
+    if (mostrarImagen) pintor.drawImage(posX,posY,imagen);
+    else pintor.drawEllipse(posX,posY,Bola::diametro,Bola::diametro);
+    
+    
     /*QBrush brush(color);
     pintor.setBrush(brush);
     pintor.drawEllipse(posX, posY, Bola::diametro, Bola::diametro);

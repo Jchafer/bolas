@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow{
         void keyPressEvent(QKeyEvent *event);
         void mousePressEvent(QMouseEvent *event);
         void mouseReleaseEvent(QMouseEvent *event);
+        void mouseMoveEvent(QMouseEvent *event);
 
         int cantidadBolas;
 
@@ -69,6 +70,10 @@ class MainWindow : public QMainWindow{
     
     signals:
         void signalNuevaBola(Bola *bola);
+
+    private:
+        void performDrag();
+        QPoint startPos;
 };
 
 #endif

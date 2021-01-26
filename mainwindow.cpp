@@ -5,6 +5,9 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QDebug>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QDrag>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     resize(800, 600);
@@ -70,8 +73,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){    
-    initialMouseClickX = event->x();
-    initialMouseClickY = event->y();
+    /*initialMouseClickX = event->x();
+    initialMouseClickY = event->y();*/
+
+    if (event->button() == Qt::LeftButton){
+                startPos = event->pos();
+        }
+        QMainWindow::mousePressEvent(event);
+
+        if (event->button() == Qt::RightButton){
+                initialMouseClickX=event->x();
+                initialMouseClickY=event->y();
+        }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
@@ -83,64 +96,24 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     (float) (event->y() - initialMouseClickY) / height() *10));
 }
 
-void MainWindow::slotRepintar(){
-    // Pedir al motor Qt que repinte la ventana de
-    foreach( Bola *bola, bolas){
-        bola->mover(width(),height());
-        
-    }
-
-    for (int i = 0; i < bolas.size(); i++){
-        for (int j = 0; j < bolas.size(); j++){
-            if (bolas.at(i) != bolas.at(j)){
-                if (bolas.at(i)->choca(bolas.at(j))){
-                    bolas.at(i)->vida --;
-                    bolas.at(j)->vida --;
-                    if (bolas.size()<25){
-                        int numero=random()%100;
-                        if (numero<5){
-                            Bola *nueva = new Bola(bolas.at(i)->posX+20, bolas.at(i)->posY-20, 
-                            ((0.1+random()%50) / 50.1) -0.5, ((0.1+random()%50) / 50.1) -0.5);
-                            nueva->padre = bolas.at(i);
-                            bolas.at(i)->hijas.append(nueva);
-
-                            bolas.append(nueva);
-                            emit signalNuevaBola(nueva);
-                            // guarrada dControlBolas->tabBolas->addTab(new WidgetBola(...));
-                        }
-                    }
-                }
-            }            
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+        if (event->button() & Qt::LeftButton) {
+                int distance = (event->pos() - startPos).manhattanLength();
+                if (distance >= QApplication::startDragDistance())
+                performDrag();
         }
-    }
+        QMainWindow::mouseMoveEvent(event);
+}
 
-    /*for (int i = 0; i < bolas.size(); i++)
-        if (bolas.at(i) != bolas.at(j))
-            if (bolas.at(i)->choca(bolas.at(j))){
-                bolas.at(i)->vidaInicial --;
-                bolas.at(j)->vidaInicial --;
-            }*/
-         
-    
-    
+void MainWindow::performDrag(){
 
-    if (dInformacion != NULL)
-        dInformacion->establecerTamanyo(width(), height());
-    
-    for (int i = 0; i < bolas.size(); i++){
-       if (bolaJugador->choca(bolas.at(i))){
-           bolaJugador->vida--;
-           bolas.at(i)->vida--;
-       }
+        QMimeData *mimeData = new QMimeData;
+        mimeData->setText(QString("hola"));
 
-    }
-
-    /*bola.mover(width(),height());
-    otraBola.mover(width(),height());*/
-
-    bolaJugador->mover(width(),height());
-
-    update();
+        QDrag *drag = new QDrag(this);
+        drag->setMimeData(mimeData);
+        drag->setPixmap(QPixmap("./png/abrupt-boy-face.png"));
+        drag->exec(Qt::MoveAction) ;
 }
 
 void MainWindow::inicializarBolas(int cantidadBolas){
@@ -213,6 +186,66 @@ void MainWindow::inicializarMenus(){
     menuFichero->addAction(accionDInfoTabla);
     menuFichero->addAction(accionDControlBolas);
     menuFichero->addAction(accionDArbolBolas);
+}
+
+void MainWindow::slotRepintar(){
+    // Pedir al motor Qt que repinte la ventana de
+    foreach( Bola *bola, bolas){
+        bola->mover(width(),height());
+        
+    }
+
+    for (int i = 0; i < bolas.size(); i++){
+        for (int j = 0; j < bolas.size(); j++){
+            if (bolas.at(i) != bolas.at(j)){
+                if (bolas.at(i)->choca(bolas.at(j))){
+                    bolas.at(i)->vida --;
+                    bolas.at(j)->vida --;
+                    if (bolas.size()<25){
+                        int numero=random()%100;
+                        if (numero<5){
+                            Bola *nueva = new Bola(bolas.at(i)->posX+20, bolas.at(i)->posY-20, 
+                            ((0.1+random()%50) / 50.1) -0.5, ((0.1+random()%50) / 50.1) -0.5);
+                            nueva->padre = bolas.at(i);
+                            bolas.at(i)->hijas.append(nueva);
+
+                            bolas.append(nueva);
+                            emit signalNuevaBola(nueva);
+                            // guarrada dControlBolas->tabBolas->addTab(new WidgetBola(...));
+                        }
+                    }
+                }
+            }            
+        }
+    }
+
+    /*for (int i = 0; i < bolas.size(); i++)
+        if (bolas.at(i) != bolas.at(j))
+            if (bolas.at(i)->choca(bolas.at(j))){
+                bolas.at(i)->vidaInicial --;
+                bolas.at(j)->vidaInicial --;
+            }*/
+         
+    
+    
+
+    if (dInformacion != NULL)
+        dInformacion->establecerTamanyo(width(), height());
+    
+    for (int i = 0; i < bolas.size(); i++){
+       if (bolaJugador->choca(bolas.at(i))){
+           bolaJugador->vida--;
+           bolas.at(i)->vida--;
+       }
+
+    }
+
+    /*bola.mover(width(),height());
+    otraBola.mover(width(),height());*/
+
+    bolaJugador->mover(width(),height());
+
+    update();
 }
 
 void MainWindow::slotDInformacion(){
