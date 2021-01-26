@@ -7,7 +7,7 @@ DArbolBolas::DArbolBolas(QVector<Bola*> * bolas, QWidget *parent) : QDialog(pare
 
     ModeloArbol *modeloArbol = new ModeloArbol(bolas);
 
-    // vistaArbol->setModel(modeloArbol);
+    vistaArbol->setModel(modeloArbol);
 
 }
 
@@ -19,7 +19,7 @@ ModeloArbol::ModeloArbol (QVector<Bola*> * bolasRecibidas, QObject *parent) : QA
 
 // Cantidad columnas
 int ModeloArbol::columnCount(const QModelIndex &parent) const{
-    return 1;
+    return 2;
 }
 
 // Cantidad filas hay colgando de una bola(hijas)
@@ -43,7 +43,12 @@ QVariant ModeloArbol::data(const QModelIndex &index, int role) const{
     void * pBola = index.internalPointer();
     Bola * bolaPreguntada = static_cast<Bola *> (pBola);
 
-    return QVariant( QString::number(bolaPreguntada->posX) );
+    if (role == Qt::DecorationRole)
+        return QVariant(bolaPreguntada->color);
+
+    if (role == Qt::DisplayRole)
+        return QVariant( QString::number(bolaPreguntada->posX) );
+    return QVariant();
 }
 
 // Pregunta por cada hija que tenga la bola
@@ -53,21 +58,20 @@ QModelIndex ModeloArbol::index(int row, int column, const QModelIndex &parent) c
         void * pPadre = parent.internalPointer();
         Bola * bolaPadre = static_cast<Bola *> (pPadre);
 
-        Bola * hija = bolaPadre->hijas.at(row);
+        Bola * hija = bolaPadre->hijas.at(row); // row = numero de hija
 
         QModelIndex indiceDevuelto = createIndex(row, column, hija);
         return indiceDevuelto;
     } else {
-        int count = 0;
-        for (int i = 0; i < bolas->size(); i++){
-            if (bolas->at(i)->padre == NULL);
-            count ++;
-            if (count == row){
+        int bolaLocaEncontrada = -1;
+        for (int i=0; i<bolas->size(); i++){
+            if (bolas->at(i)->padre == NULL) bolaLocaEncontrada ++;
+            if (bolaLocaEncontrada == row){
                 QModelIndex indiceDevuelto = createIndex(row, column, bolas->at(i));
                 return indiceDevuelto;
             }
+              
         }
-            
     }
     
 }
