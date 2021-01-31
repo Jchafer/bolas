@@ -24,7 +24,8 @@ void WidgetBola::dragEnterEvent ( QDragEnterEvent * event ) {
 void WidgetBola::dropEvent ( QDropEvent * event ){
 
     //averiguar qué tipo mime tiene event ó verificar que si es de texto
-    if ( ! event->mimeData()->hasUrls() ) return;
+    //if ( ! event->mimeData()->hasUrls() ) return;
+    if ( ! event->mimeData()->hasText() ) return;
 
     // sacar el texto y mostrarlo en el cumessachbocs siguienteí
     QString text = (event->mimeData()->urls()).first().path();

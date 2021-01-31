@@ -8,6 +8,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QDrag>
+#include <QPoint>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     resize(800, 600);
@@ -31,11 +32,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     dInfoTabla = NULL;
     dControlBolas = NULL;
     dArbolBolas = NULL;
+
+    drag = NULL;
+
+    trayIcon = NULL;
     /*bola = Bola(100, 100, 0.2, 0.5);
     otraBola = Bola(200, 200, 0.5, 0.8);*/
 
     initialMouseClickY = 0;
     initialMouseClickY = 0;
+
+    if ( QSystemTrayIcon::isSystemTrayAvailable()  == true ) {
+   	 trayIcon = new QSystemTrayIcon(this);
+   	 trayIcon->setContextMenu(menuContextual);
+   	 trayIcon->setIcon(QIcon("./png/parpadeo.png"));
+   	 trayIcon->show();
+   	 connect(this,SIGNAL(jugadorChoqued()),this,SLOT(slotChocar()));    
+    }
+
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
@@ -73,18 +87,21 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){    
-    /*initialMouseClickX = event->x();
-    initialMouseClickY = event->y();*/
+    initialMouseClickX = event->x();
+    initialMouseClickY = event->y();
 
-    if (event->button() == Qt::LeftButton){
-                startPos = event->pos();
-        }
-        QMainWindow::mousePressEvent(event);
+    /*if (event->button() == Qt::LeftButton){
+        startPos = event->pos();
+    }
+    QMainWindow::mousePressEvent(event);
 
-        if (event->button() == Qt::RightButton){
-                initialMouseClickX=event->x();
-                initialMouseClickY=event->y();
-        }
+    if (event->button() == Qt::RightButton){
+        initialMouseClickX=event->x();
+        initialMouseClickY=event->y();
+    }*/
+
+    drag = NULL;
+
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
@@ -97,12 +114,31 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event){
-        if (event->button() & Qt::LeftButton) {
-                int distance = (event->pos() - startPos).manhattanLength();
-                if (distance >= QApplication::startDragDistance())
-                performDrag();
+        QPoint posInicial(initialMouseClickX, initialMouseClickY);
+        QPoint posFinal = event->pos();
+        int distance = (posFinal - posInicial).manhattanLength();
+
+        if (distance > QApplication::startDragDistance()) return;
+    
+        if (drag == NULL){
+            QMimeData * mimeData = new QMimeData;
+            QPixmap pixmap(size());
+            this->render(&pixmap);
+            mimeData->setImageData(pixmap);
+
+            drag = new QDrag(this);
+            drag->setMimeData(mimeData);
+            //drag->setPixmap(QPixmap("mai_ok.png"));
+            drag->exec(Qt::MoveAction);
         }
-        QMainWindow::mouseMoveEvent(event);
+        
+
+        /*if (event->button() & Qt::LeftButton) {
+            int distance = (event->pos() - startPos).manhattanLength();
+            if (distance >= QApplication::startDragDistance())
+            performDrag();
+        }
+        QMainWindow::mouseMoveEvent(event);*/
 }
 
 void MainWindow::performDrag(){
@@ -136,6 +172,7 @@ void MainWindow::inicializarBolas(int cantidadBolas){
 
 void MainWindow::inicializarMenus(){
     QMenu *menuFichero = menuBar()->addMenu("Fichero");
+
     accionDInformacion = new QAction("Información Básica", this);
     //accionDInformacion->setIcon(QIcon("./icons/salir.png"));
     //accionDInformacion->setShortcut(QKeySequence::Quit);  // Ctrl+Q
@@ -181,6 +218,12 @@ void MainWindow::inicializarMenus(){
     connect(accionDArbolBolas, SIGNAL(triggered()),
             this, SLOT(slotDArbolBolas()));
 
+    menuContextual = new QMenu("Contextual");
+    menuContextual->addAction(accionDInformacion);
+
+    this->setContextMenuPolicy(Qt::ActionsContextMenu);
+    this->addAction(accionDInfoBolas);
+
     menuFichero->addAction(accionDInformacion);
     menuFichero->addAction(accionDInfoBolas);
     menuFichero->addAction(accionDInfoTabla);
@@ -211,6 +254,7 @@ void MainWindow::slotRepintar(){
 
                             bolas.append(nueva);
                             emit signalNuevaBola(nueva);
+                            
                             // guarrada dControlBolas->tabBolas->addTab(new WidgetBola(...));
                         }
                     }
@@ -219,16 +263,15 @@ void MainWindow::slotRepintar(){
         }
     }
 
-    /*for (int i = 0; i < bolas.size(); i++)
-        if (bolas.at(i) != bolas.at(j))
+    /*for (int i = 0; i < bolas.size(); i++){
+        if (bolas.at(i) != bolas.at(j)){
             if (bolas.at(i)->choca(bolas.at(j))){
                 bolas.at(i)->vidaInicial --;
                 bolas.at(j)->vidaInicial --;
-            }*/
-         
+            }
+        }
+    }*/
     
-    
-
     if (dInformacion != NULL)
         dInformacion->establecerTamanyo(width(), height());
     
@@ -236,6 +279,7 @@ void MainWindow::slotRepintar(){
        if (bolaJugador->choca(bolas.at(i))){
            bolaJugador->vida--;
            bolas.at(i)->vida--;
+           emit jugadorChoqued();
        }
 
     }
@@ -298,4 +342,12 @@ void MainWindow::slotDArbolBolas(){
 
     dArbolBolas->show();
     
+}
+
+void MainWindow::slotChocar(){
+    if (trayIcon == NULL) return;
+    trayIcon->showMessage(QString("CUIDADO! Choque!"),
+                        QString("Juega mejor! que te van a matar"),
+                        QSystemTrayIcon::Information, 1000);
+
 }

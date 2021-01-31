@@ -13,6 +13,8 @@
 #include "dControlBolas.h"
 #include "dArbolBolas.h"
 #include <QAction>
+#include <QDrag>
+#include <QSystemTrayIcon>
 
 
 class MainWindow : public QMainWindow{
@@ -31,6 +33,9 @@ class MainWindow : public QMainWindow{
 
         int cantidadBolas;
 
+        QDrag * drag;
+
+        QSystemTrayIcon * trayIcon;
         //float posX, posY;
         //float velX, velY;
 
@@ -56,9 +61,10 @@ class MainWindow : public QMainWindow{
         DArbolBolas * dArbolBolas;         
         QAction *accionDArbolBolas;
 
+        QMenu *menuContextual;
+
         int initialMouseClickX;
         int initialMouseClickY;
-
 
     public slots:
         void slotRepintar();    
@@ -67,9 +73,11 @@ class MainWindow : public QMainWindow{
         void slotDInfoTabla();
         void slotDControlBolas();
         void slotDArbolBolas();
+        void slotChocar();
     
     signals:
         void signalNuevaBola(Bola *bola);
+        void jugadorChoqued();
 
     private:
         void performDrag();
