@@ -63,6 +63,9 @@ class MainWindow : public QMainWindow{
 
         QMenu *menuContextual;
 
+        QAction *accionGuardarPartida;
+        QAction *accionCargarPartida;
+
         int initialMouseClickX;
         int initialMouseClickY;
 
@@ -74,6 +77,9 @@ class MainWindow : public QMainWindow{
         void slotDControlBolas();
         void slotDArbolBolas();
         void slotChocar();
+
+        void slotGuardarPartida();
+        void slotCargarPartida();
     
     signals:
         void signalNuevaBola(Bola *bola);

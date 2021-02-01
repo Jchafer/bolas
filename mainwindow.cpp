@@ -9,6 +9,10 @@
 #include <QMimeData>
 #include <QDrag>
 #include <QPoint>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     resize(800, 600);
@@ -156,9 +160,9 @@ void MainWindow::inicializarBolas(int cantidadBolas){
     for (int i = 0; i < cantidadBolas; i++)
     {
         bolas.append(new Bola(random()%width(),
-        random()%height(),
-        (0.1 + random()%50) / 50.1,
-        (0.1 + random()%50) / 50.1));
+                                random()%height(),
+                                (0.1 + random()%50) / 50.1,
+                                (0.1 + random()%50) / 50.1));
        /*Bola bola = new Bola(100, 100, 0.2, 0.5);
        bolas.push_back(*bola);*/
 
@@ -218,17 +222,39 @@ void MainWindow::inicializarMenus(){
     connect(accionDArbolBolas, SIGNAL(triggered()),
             this, SLOT(slotDArbolBolas()));
 
+    accionGuardarPartida = new QAction("Guardar partida", this);
+    //accionDArbolBolas->setIcon(QIcon("./icons/salir.png"));
+    //accionDArbolBolas->setShortcut(QKeySequence::Quit);  // Ctrl+Q
+    accionGuardarPartida->setToolTip("Guardar partida");              // Texto sobre el icono
+    accionGuardarPartida->setStatusTip("GUardar partida de bolas"); // Texto en la barra de estado.
+
+    connect(accionGuardarPartida, SIGNAL(triggered()),
+            this, SLOT(slotGuardarPartida()));
+
+    accionCargarPartida = new QAction("Cargar partida", this);
+    //accionCargarPartida->setIcon(QIcon("./icons/salir.png"));
+    //accionCargarPartida->setShortcut(QKeySequence::Quit);  // Ctrl+Q
+    accionCargarPartida->setToolTip("Cargar partida");              // Texto sobre el icono
+    accionCargarPartida->setStatusTip("Cargar partida de bolas"); // Texto en la barra de estado.
+
+    connect(accionCargarPartida, SIGNAL(triggered()),
+            this, SLOT(slotCargarPartida()));
+
+
     menuContextual = new QMenu("Contextual");
     menuContextual->addAction(accionDInformacion);
 
     this->setContextMenuPolicy(Qt::ActionsContextMenu);
     this->addAction(accionDInfoBolas);
 
+
     menuFichero->addAction(accionDInformacion);
     menuFichero->addAction(accionDInfoBolas);
     menuFichero->addAction(accionDInfoTabla);
     menuFichero->addAction(accionDControlBolas);
     menuFichero->addAction(accionDArbolBolas);
+    menuFichero->addAction(accionGuardarPartida);
+    menuFichero->addAction(accionCargarPartida);
 }
 
 void MainWindow::slotRepintar(){
@@ -349,5 +375,43 @@ void MainWindow::slotChocar(){
     trayIcon->showMessage(QString("CUIDADO! Choque!"),
                         QString("Juega mejor! que te van a matar"),
                         QSystemTrayIcon::Information, 1000);
+
+}
+
+void MainWindow::slotGuardarPartida(){
+
+    QJsonObject jsonPrincipal;
+
+    QJsonObject jsonJugador;
+    jsonJugador["x"] = bolaJugador->posX;
+    jsonJugador["y"] = bolaJugador->posY;
+
+    jsonPrincipal["jugador"] = jsonJugador;
+
+    QJsonArray arrayBolas;
+    for (Bola* bola : bolas){
+        QJsonObject bolaJson;
+
+        bolaJson["x"] = bola->posX;
+        bolaJson["y"] = bola->posY;
+
+        arrayBolas.append(bolaJson);
+    }
+
+    jsonPrincipal["bolas"] = arrayBolas;
+
+
+    // Proceso de creación del fichero
+    QFile saveFile(QStringLiteral("save.json"));
+    saveFile.open(QIODevice::WriteOnly);
+    QJsonDocument saveDoc(jsonPrincipal);
+    saveFile.write(saveDoc.toJson());
+    saveFile.close();
+
+}
+
+void MainWindow::slotCargarPartida(){
+
+    
 
 }
