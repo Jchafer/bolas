@@ -12,6 +12,7 @@ Bola::Bola(float posX, float posY, float velX, float velY)
     this->velY = velY;
     this->color = QColor(random()%256, random()%256, random()%256);
 
+    colisiones = 0;
     vida = vidaInicial;
     padre = NULL;
     imagen = QImage("./png/abrupt-boy-face.png");
@@ -59,6 +60,9 @@ void Bola::pintar(QPainter &pintor){
     if (mostrarImagen) pintor.drawImage(posX,posY,imagen);
     else pintor.drawEllipse(posX,posY,Bola::diametro,Bola::diametro);
     
+    pintor.drawText(posX - 10,
+                    posY - 20,
+                    QString("Colisiones: ") + QString::number(colisiones));
     
     /*QBrush brush(color);
     pintor.setBrush(brush);
@@ -113,6 +117,7 @@ bool Bola::choca(Bola *otra){
     /*if (distancia <= diametro)
         velX = velY = otra -> velX = otra -> velY = 0;*/    
 
+    colisiones++;
     return rebote;
 }
 

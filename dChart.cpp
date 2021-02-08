@@ -25,11 +25,11 @@ DChart::DChart(QVector<Bola*> * bolas, QWidget *parent) : QDialog(parent), bolas
     datosChart->addSeries(serie);
 
     axisYVertical = new QValueAxis;
-    axisYVertical->setRange(0, 7);
+    axisYVertical->setRange(0, 60);
     axisYVertical->setTitleText("Goles");
 
     axisXHorizontal = new QValueAxis;
-    axisXHorizontal->setRange(0, 5);
+    axisXHorizontal->setRange(0, 60);
     axisXHorizontal->setTitleText("Dias");
 
     datosChart->addAxis(axisYVertical, Qt::AlignLeft);

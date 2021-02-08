@@ -16,6 +16,8 @@ public:
     QColor color;
     static int vidaInicial;
     int vida;
+    int colisiones;
+    
 
     QImage imagen;
     bool mostrarImagen;
