@@ -13,6 +13,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QByteArray>
+#include <QBuffer>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     resize(800, 600);
@@ -36,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     dInfoTabla = NULL;
     dControlBolas = NULL;
     dArbolBolas = NULL;
+    dChart = NULL;
 
     drag = NULL;
 
@@ -240,6 +243,15 @@ void MainWindow::inicializarMenus(){
     connect(accionCargarPartida, SIGNAL(triggered()),
             this, SLOT(slotCargarPartida()));
 
+    accionDChart = new QAction("Grafico", this);
+    //accionDChart->setIcon(QIcon("./icons/salir.png"));
+    //accionDChart->setShortcut(QKeySequence::Quit);  // Ctrl+Q
+    accionDChart->setToolTip("Grafico");              // Texto sobre el icono
+    accionDChart->setStatusTip("Grafico"); // Texto en la barra de estado.
+
+    connect(accionDChart, SIGNAL(triggered()),
+            this, SLOT(slotDChart()));
+
 
     menuContextual = new QMenu("Contextual");
     menuContextual->addAction(accionDInformacion);
@@ -255,6 +267,7 @@ void MainWindow::inicializarMenus(){
     menuFichero->addAction(accionDArbolBolas);
     menuFichero->addAction(accionGuardarPartida);
     menuFichero->addAction(accionCargarPartida);
+    menuFichero->addAction(accionDChart);
 }
 
 void MainWindow::slotRepintar(){
@@ -378,13 +391,26 @@ void MainWindow::slotChocar(){
 
 }
 
+void MainWindow::slotDChart(){
+    QVector<Bola*> *punteroABolas = &bolas;
+    if (dChart == NULL){
+        dChart = new DChart(punteroABolas);
+
+    }
+
+    dChart->show();
+}
+
 void MainWindow::slotGuardarPartida(){
 
     QJsonObject jsonPrincipal;
 
     QJsonObject jsonJugador;
-    jsonJugador["x"] = bolaJugador->posX;
-    jsonJugador["y"] = bolaJugador->posY;
+    jsonJugador["posX"] = bolaJugador->posX;
+    jsonJugador["posY"] = bolaJugador->posY;
+    jsonJugador["velX"] = bolaJugador->velX;
+    jsonJugador["velY"] = bolaJugador->velY;
+    jsonJugador["vida"] = bolaJugador->vida;
 
     jsonPrincipal["jugador"] = jsonJugador;
 
@@ -392,8 +418,27 @@ void MainWindow::slotGuardarPartida(){
     for (Bola* bola : bolas){
         QJsonObject bolaJson;
 
-        bolaJson["x"] = bola->posX;
-        bolaJson["y"] = bola->posY;
+        bolaJson["posX"] = bola->posX;
+        bolaJson["posY"] = bola->posY;
+        bolaJson["velX"] = bola->velX;
+        bolaJson["velY"] = bola->velY;
+        bolaJson["vida"] = bola->vida;
+
+        QImage img = bola->imagen;
+        QByteArray byteArray;
+        QBuffer buffer(&byteArray);
+        img.save(&buffer, "PNG");
+        QString imgBase64 = QString::fromLatin1(byteArray.toBase64().data());
+        
+        bolaJson["imagen"] = imgBase64;
+
+        QJsonObject colorJson;
+
+        colorJson["red"] = bola->color.red();
+        colorJson["green"] = bola->color.green();
+        colorJson["blue"] = bola->color.blue();
+
+        bolaJson["color"] = colorJson;
 
         arrayBolas.append(bolaJson);
     }
@@ -411,7 +456,59 @@ void MainWindow::slotGuardarPartida(){
 }
 
 void MainWindow::slotCargarPartida(){
+    for (Bola* bola : bolas){
+        delete bola;
+    }
+    bolas.clear();
 
+    // Proceso de lectura del fichero
+    QFile loadFile(QStringLiteral("save.json"));
+
+    if (!loadFile.open(QIODevice::ReadOnly))
+        return;
     
+    QByteArray savedData = loadFile.readAll();
 
+    QJsonDocument readDoc(QJsonDocument::fromJson(savedData));
+    QJsonObject jsonPrincipal = readDoc.object();
+    if (! jsonPrincipal.contains("bolas") && jsonPrincipal["bolas"].isArray()){
+        qDebug() << "Cargar partida: bolas no encontradas en archivo";
+        return;
+    }
+
+    QJsonArray arrayBolas = jsonPrincipal["bolas"].toArray();
+    for (int i = 0; i < arrayBolas.size(); i++){
+        QJsonObject objetoBola = arrayBolas[i].toObject();
+
+        float posXNuevaBola = objetoBola["posX"].toDouble();
+        float posYNuevaBola = objetoBola["posY"].toDouble();
+        float velXNuevaBola = objetoBola["velX"].toDouble();
+        float velYNuevaBola = objetoBola["velY"].toDouble();
+
+        Bola * nuevaBola = new Bola(posXNuevaBola, posYNuevaBola, 
+                            velXNuevaBola, velYNuevaBola);
+        
+        QImage imagenNB;
+        // Leer el elemento json y convertirlo
+        QString imgBase64 = objetoBola["imagen"].toString();
+        QByteArray byteArray = imgBase64.toLatin1();
+        byteArray = QByteArray::fromBase64(byteArray, QByteArray::Base64Encoding);
+        QBuffer buffer(&byteArray);
+
+        imagenNB.loadFromData(byteArray, "PNG");
+        nuevaBola->imagen = imagenNB;
+
+        int vidaNuevaBola = objetoBola["vida"].toInt();
+        nuevaBola->vida = vidaNuevaBola;
+
+        QJsonObject objetoColor = objetoBola["color"].toObject();
+        int colorRojoNuevaBola = objetoColor["red"].toInt();
+        int colorVerdeNuevaBola = objetoColor["green"].toInt();
+        int colorAzulNuevaBola = objetoColor["blue"].toInt();
+        nuevaBola->color.setRgb(colorRojoNuevaBola, colorVerdeNuevaBola, colorAzulNuevaBola);
+
+        bolas.append(nuevaBola);
+    }
+
+    loadFile.close();
 }

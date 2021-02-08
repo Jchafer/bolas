@@ -15,7 +15,10 @@
 #include <QAction>
 #include <QDrag>
 #include <QSystemTrayIcon>
+#include <QChartView>
+#include "dChart.h"
 
+QT_CHARTS_USE_NAMESPACE
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
@@ -69,6 +72,9 @@ class MainWindow : public QMainWindow{
         int initialMouseClickX;
         int initialMouseClickY;
 
+        DChart * dChart;         
+        QAction *accionDChart;
+
     public slots:
         void slotRepintar();    
         void slotDInformacion();
@@ -77,6 +83,7 @@ class MainWindow : public QMainWindow{
         void slotDControlBolas();
         void slotDArbolBolas();
         void slotChocar();
+        void slotDChart();
 
         void slotGuardarPartida();
         void slotCargarPartida();
