@@ -7,6 +7,7 @@
 #include <QChart>
 #include <QLineSeries>
 #include <QValueAxis>
+#include <QTimer>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -22,7 +23,11 @@ public:
     QLineSeries * serie;
     QValueAxis * axisXHorizontal;
     QValueAxis * axisYVertical;
+    QTimer * temporizador;
 
+public slots:
+    void slotResaltar(const QPointF &, bool estado);
+    void slotTemporizador();
 };
 
 #endif 

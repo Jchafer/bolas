@@ -114,10 +114,12 @@ bool Bola::choca(Bola *otra){
         rebote = true;
     }
 
-    /*if (distancia <= diametro)
-        velX = velY = otra -> velX = otra -> velY = 0;*/    
+    if (rebote){
+        colisiones++;
+        otra->colisiones++;
+    }
 
-    colisiones++;
+    
     return rebote;
 }
 
