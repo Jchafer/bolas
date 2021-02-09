@@ -30,18 +30,18 @@ DChart::DChart(QVector<Bola*> * bolas, QWidget *parent) : QDialog(parent), bolas
 
     serie = new QLineSeries();
 
-    serie->append(1,1);
-    serie->append(2,20);
-    serie->append(3,15);
+    serie->append(0,0);
+    //serie->append(2,20);
+    //serie->append(3,15);
     datosChart->addSeries(serie);
 
     axisXHorizontal = new QValueAxis;
-    axisXHorizontal->setRange(0, 3);
-    axisXHorizontal->setTitleText("Dias");
+    //axisXHorizontal->setRange(0, 3);
+    //axisXHorizontal->setTitleText("Dias");
 
     axisYVertical = new QValueAxis;
-    axisYVertical->setRange(0, 20);
-    axisYVertical->setTitleText("Goles");
+    //axisYVertical->setRange(0, 20);
+    //axisYVertical->setTitleText("Goles");
     
     datosChart->addAxis(axisXHorizontal, Qt::AlignBottom);
     datosChart->addAxis(axisYVertical, Qt::AlignLeft);
@@ -72,27 +72,56 @@ void DChart::slotResaltar(const QPointF &punto, bool estado){
 }
 
 void DChart::slotTemporizador(){
-    serie->replace(  serie->count() -1 ,
-   				  serie->at( serie->count() -1 ).x() + 0.5,
-   				  serie->at( serie->count() -1 ).y());
+
+    int totalColisiones = 0;
+    static int count;
+    count++;
+
+    for (int i = 0; i < bolasRecibidas->size(); i++)
+        totalColisiones += bolasRecibidas->at(i)->colisiones;
+    
+    serie->append(count, totalColisiones);
+
+    /*serie->replace(  serie->count() -1 ,
+   				  serie->at( serie->count() -1 ).x() + totalColisiones,
+   				  serie->at( serie->count() -1 ).y() + 1);*/
     
     
     QList<QAbstractAxis*> lista = datosChart->axes(Qt::Horizontal);   
     foreach (QAbstractAxis * axis, lista  ) {
-        if (axis->orientation() == Qt::Horizontal) {
-            datosChart->removeAxis(axis);
+        if (axis->orientation() == Qt::Horizontal) {            
             serie->detachAxis(axis);
+            datosChart->removeAxis(axis);
             delete axis;
-            break; // no debería hacerlo
+            break;
+        }
+    }
+
+    QValueAxis *axisX = new QValueAxis;
+    axisX->setRange(0,count + 1 );
+    axisX->setTitleText("Tiempo");
+    
+    datosChart->addAxis(axisX,Qt::AlignBottom);
+    serie->attachAxis(axisX);
+
+
+    lista = datosChart->axes(Qt::Vertical);   
+    foreach (QAbstractAxis * axis, lista ) {
+        if (axis->orientation() == Qt::Vertical) {
+            serie->detachAxis(axis);
+            datosChart->removeAxis(axis);            
+            delete axis;
+            break;
         }
     }
    
     
-   QValueAxis *axisX = new QValueAxis;
-    axisX->setRange(0,serie->at( serie->count() -1 ).x() + 1 );
-    axisX->setTitleText("Prueba");
+    QValueAxis *axisY = new QValueAxis;
+    axisY->setRange(0,totalColisiones + 1 );
+    axisY->setTitleText("Colisiones");
     
-    datosChart->addAxis(axisX,Qt::AlignBottom);
-    serie->attachAxis(axisX);
+    datosChart->addAxis(axisY,Qt::AlignLeft);
+    serie->attachAxis(axisY);
+
 }
 
