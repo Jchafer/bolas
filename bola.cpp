@@ -4,15 +4,17 @@
 
 int Bola::vidaInicial;
 
-Bola::Bola(float posX, float posY, float velX, float velY)
+Bola::Bola(float posX, float posY, float velX, float velY, QString nombre)
 {
     this->posX = posX;
     this->posY = posY;
     this->velX = velX;
     this->velY = velY;
+    this->nombre = nombre;
     this->color = QColor(random()%256, random()%256, random()%256);
 
     colisiones = 0;
+    coliPared = 0;
     vida = vidaInicial;
     padre = NULL;
     imagen = QImage("./png/abrupt-boy-face.png");
@@ -29,11 +31,22 @@ Bola::Bola(){
 
 void Bola::mover(int ancho, int alto){
     // Seccion de deteccion de colision contra los bordes
-    if (posX >= ancho - diametro ) velX = -fabs(velX);
-    if (posX <= 0 ) velX = fabs(velX);
-
-    if (posY >= alto - diametro) velY = -fabs(velY);
-    if (posY <= 0 ) velY = fabs(velY);
+    if (posX >= ancho - diametro ){
+        velX = -fabs(velX);
+        coliPared++;
+    }
+    if (posX <= 0 ){
+        velX = fabs(velX);
+        coliPared++;
+    }
+    if (posY >= alto - diametro){
+        velY = -fabs(velY);
+        coliPared++;
+    }
+    if (posY <= 0 ){
+        velY = fabs(velY);
+        coliPared++;
+    } 
 
     // Seccion de actualizacion de la posicion
     posX = posX + velX;
@@ -48,9 +61,9 @@ void Bola::pintar(QPainter &pintor){
     float anchoVerde = (((float)vida) / vidaInicial) * (float)ancho;
     float anchoRojo = (ancho - (float)anchoVerde);
     pintor.setBrush(Qt::green);
-    pintor.drawRect(posX, posY, anchoVerde, 3);
+    pintor.drawRect(posX, posY - 5, anchoVerde, 3);
     pintor.setBrush(Qt::red);
-    pintor.drawRect(posX + anchoVerde, posY, anchoRojo, 3);
+    pintor.drawRect(posX + anchoVerde, posY - 5, anchoRojo, 3);
     pintor.setBrush(color);
     pintor.drawEllipse(posX, posY, Bola::diametro, Bola::diametro);
 
@@ -61,8 +74,14 @@ void Bola::pintar(QPainter &pintor){
     else pintor.drawEllipse(posX,posY,Bola::diametro,Bola::diametro);
     
     pintor.drawText(posX - 10,
-                    posY - 20,
-                    QString("Colisiones: ") + QString::number(colisiones));
+                    posY - 10,
+                    QString(nombre) + QString(" (") + QString::number(vida) + QString(")"));
+    pintor.drawText(posX - 10,
+                    posY + 65,
+                    QString("Col. Bola: ") + QString::number(colisiones));
+    pintor.drawText(posX - 10,
+                    posY + 80,
+                    QString("Col. Pared: ") + QString::number(coliPared));
     
     /*QBrush brush(color);
     pintor.setBrush(brush);
@@ -126,4 +145,18 @@ bool Bola::choca(Bola *otra){
 void Bola::parar(){
     this->velX = 0;
     this->velY = 0;
+}
+
+void Bola::cambiarColor(QColor &colorRecibido){
+    this->color = colorRecibido;
+}
+
+void Bola::acelerar(){
+    this->velX = velX * 1.05;
+    this->velY = velY * 1.05;
+}
+
+void Bola::frenar(){
+    this->velX = velX / 2;
+    this->velY = velY / 2;
 }

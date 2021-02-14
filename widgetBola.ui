@@ -6,39 +6,43 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>233</width>
-    <height>182</height>
+    <width>348</width>
+    <height>173</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="pushButtonElegirColor">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>40</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Elegir Color</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButtonPararLaBola">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>100</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Parar la bola</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pushButtonElegirColor">
+     <property name="text">
+      <string>Elegir Color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="pushButtonAumVel">
+     <property name="text">
+      <string>Aumentar Velocidad</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushButtonPararLaBola">
+     <property name="text">
+      <string>Parar la bola</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushButtonRedVel">
+     <property name="text">
+      <string>Reducir Velocidad</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

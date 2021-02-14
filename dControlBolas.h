@@ -20,6 +20,8 @@ public:
 public slots:
     void slotBotonParar();
     void slotBolaNueva(Bola *bola);
+    void slotBotonAumentarVel();
+    void slotBotonReducirVel();
 };
 
 

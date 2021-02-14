@@ -17,6 +17,7 @@
 #include <QSystemTrayIcon>
 #include <QChartView>
 #include "dChart.h"
+#include "dTablaInfo.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -75,6 +76,9 @@ class MainWindow : public QMainWindow{
         DChart * dChart;         
         QAction *accionDChart;
 
+        DTablaInfo * dTablaInfo;         
+        QAction *accionDTablaInfo;
+
     public slots:
         void slotRepintar();    
         void slotDInformacion();
@@ -84,6 +88,8 @@ class MainWindow : public QMainWindow{
         void slotDArbolBolas();
         void slotChocar();
         void slotDChart();
+
+        void slotDTablaInfo();
 
         void slotGuardarPartida();
         void slotCargarPartida();

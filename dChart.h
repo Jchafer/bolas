@@ -17,6 +17,7 @@ public:
     DChart(QVector<Bola*> * bolas, QWidget *parent = 0);
    
     QVector<Bola*> *bolasRecibidas;
+    QVector<QLineSeries*> series; 
 
     QChartView * vistaChart;
     QChart * datosChart;

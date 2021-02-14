@@ -4,20 +4,19 @@
 #include <QColor>
 #include <QVector>
 #include <QImage>
+#include <QColor>
 
 class Bola{
 public:
     Bola();
-    Bola(float posX, float posY, float velX, float velY);
+    Bola(float posX, float posY, float velX, float velY, QString nombre);
 
-    float posX, posY;
-    float velX, velY;
+    float posX, posY, velX, velY;
     static const int diametro = 50;
     QColor color;
     static int vidaInicial;
-    int vida;
-    int colisiones;
-    
+    int vida, colisiones, coliPared;
+    QString nombre;
 
     QImage imagen;
     bool mostrarImagen;
@@ -30,7 +29,10 @@ public:
     void pintar(QPainter &pintor);
     bool choca(Bola *otra);
     void parar();
+    void cambiarColor(QColor &color);
     void ponImagen(QImage&);
+    void acelerar();
+    void frenar();
 };
 
 #endif 

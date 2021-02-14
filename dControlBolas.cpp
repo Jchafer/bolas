@@ -18,6 +18,12 @@ DControlBolas::DControlBolas(QVector<Bola*> * bolas, QWidget *parent) : QDialog(
     connect(pushButtonPararBola, SIGNAL(clicked()),
         this, SLOT(slotBotonParar()));
 
+    connect(pushButtonAumVel, SIGNAL(clicked()),
+        this, SLOT(slotBotonAumentarVel()));
+
+    connect(pushButtonRedVel, SIGNAL(clicked()),
+        this, SLOT(slotBotonReducirVel()));
+
 }
 
 void DControlBolas::slotBotonParar(){
@@ -45,4 +51,14 @@ void DControlBolas::slotBolaNueva(Bola *bola){
     for ( int i = 0; i < bolasRecibidas->size(); i++){
         tabBolas->addTab(new WidgetBola(bolasRecibidas->at(i)), QString("Bola ") + QString::number(i));
     }*/
+}
+
+void DControlBolas::slotBotonAumentarVel(){
+    WidgetBola *widgetBola = qobject_cast<WidgetBola*>(tabBolas->currentWidget());
+    widgetBola->slotBotonAumentarVelocidad();
+}
+
+void DControlBolas::slotBotonReducirVel(){
+    WidgetBola *widgetBola = qobject_cast<WidgetBola*>(tabBolas->currentWidget());
+    widgetBola->slotBotonReducirVelocidad();
 }

@@ -14,6 +14,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QWidget>
@@ -27,34 +28,58 @@ public:
     QTabWidget *tabBolas;
     QWidget *tab;
     QWidget *tab_2;
+    QWidget *widget;
+    QGridLayout *gridLayout;
     QPushButton *pushButtonPararBola;
     QCheckBox *checkBoxPararTodas;
+    QPushButton *pushButtonAumVel;
+    QPushButton *pushButtonRedVel;
 
     void setupUi(QDialog *DControlBolas)
     {
         if (DControlBolas->objectName().isEmpty())
             DControlBolas->setObjectName(QString::fromUtf8("DControlBolas"));
-        DControlBolas->resize(400, 345);
+        DControlBolas->resize(400, 399);
         buttonBox = new QDialogButtonBox(DControlBolas);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(190, 290, 181, 31));
+        buttonBox->setGeometry(QRect(190, 350, 175, 25));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         tabBolas = new QTabWidget(DControlBolas);
         tabBolas->setObjectName(QString::fromUtf8("tabBolas"));
-        tabBolas->setGeometry(QRect(40, 20, 321, 211));
+        tabBolas->setGeometry(QRect(20, 20, 341, 221));
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
         tabBolas->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         tabBolas->addTab(tab_2, QString());
-        pushButtonPararBola = new QPushButton(DControlBolas);
+        widget = new QWidget(DControlBolas);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(21, 259, 341, 81));
+        gridLayout = new QGridLayout(widget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        pushButtonPararBola = new QPushButton(widget);
         pushButtonPararBola->setObjectName(QString::fromUtf8("pushButtonPararBola"));
-        pushButtonPararBola->setGeometry(QRect(50, 240, 89, 25));
-        checkBoxPararTodas = new QCheckBox(DControlBolas);
+
+        gridLayout->addWidget(pushButtonPararBola, 0, 0, 1, 1);
+
+        checkBoxPararTodas = new QCheckBox(widget);
         checkBoxPararTodas->setObjectName(QString::fromUtf8("checkBoxPararTodas"));
-        checkBoxPararTodas->setGeometry(QRect(180, 240, 92, 23));
+
+        gridLayout->addWidget(checkBoxPararTodas, 0, 1, 1, 1);
+
+        pushButtonAumVel = new QPushButton(widget);
+        pushButtonAumVel->setObjectName(QString::fromUtf8("pushButtonAumVel"));
+
+        gridLayout->addWidget(pushButtonAumVel, 1, 0, 1, 1);
+
+        pushButtonRedVel = new QPushButton(widget);
+        pushButtonRedVel->setObjectName(QString::fromUtf8("pushButtonRedVel"));
+
+        gridLayout->addWidget(pushButtonRedVel, 1, 1, 1, 1);
+
 
         retranslateUi(DControlBolas);
         QObject::connect(buttonBox, SIGNAL(accepted()), DControlBolas, SLOT(accept()));
@@ -73,6 +98,8 @@ public:
         tabBolas->setTabText(tabBolas->indexOf(tab_2), QApplication::translate("DControlBolas", "Tab 2", nullptr));
         pushButtonPararBola->setText(QApplication::translate("DControlBolas", "Parar Bola", nullptr));
         checkBoxPararTodas->setText(QApplication::translate("DControlBolas", "Parar todas", nullptr));
+        pushButtonAumVel->setText(QApplication::translate("DControlBolas", "Aumentar Velocidad", nullptr));
+        pushButtonRedVel->setText(QApplication::translate("DControlBolas", "Reducir Velocidad", nullptr));
     } // retranslateUi
 
 };

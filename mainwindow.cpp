@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     dControlBolas = NULL;
     dArbolBolas = NULL;
     dChart = NULL;
+    dTablaInfo = NULL;
 
     drag = NULL;
 
@@ -117,7 +118,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 
     bolas.append(new Bola(initialMouseClickX, initialMouseClickY, 
     (float) (event->x() - initialMouseClickX) / width() *10,
-    (float) (event->y() - initialMouseClickY) / height() *10));
+    (float) (event->y() - initialMouseClickY) / height() *10,
+    QString("Bola ") + QString::number(bolas.size())));
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event){
@@ -162,16 +164,17 @@ void MainWindow::performDrag(){
 void MainWindow::inicializarBolas(int cantidadBolas){
     for (int i = 0; i < cantidadBolas; i++)
     {
-        bolas.append(new Bola(random()%width(),
-                                random()%height(),
+        bolas.append(new Bola(random()%width() - 100,
+                                random()%height() - 100,
                                 (0.1 + random()%50) / 50.1,
-                                (0.1 + random()%50) / 50.1));
+                                (0.1 + random()%50) / 50.1,
+                                QString("Bola ") + QString::number(i)));
        /*Bola bola = new Bola(100, 100, 0.2, 0.5);
        bolas.push_back(*bola);*/
 
     }
 
-    bolaJugador = new Bola(100, 100, 0, 0);
+    bolaJugador = new Bola(100, 100, 0, 0, "Bola Jugador");
     bolaJugador->color = QColor("black");
 
     // bolas.append(bolaJugador);
@@ -252,6 +255,15 @@ void MainWindow::inicializarMenus(){
     connect(accionDChart, SIGNAL(triggered()),
             this, SLOT(slotDChart()));
 
+    accionDTablaInfo = new QAction("Datos Prueba", this);
+    //accionDTablaInfo->setIcon(QIcon("./icons/salir.png"));
+    //accionDTablaInfo->setShortcut(QKeySequence::Quit);  // Ctrl+Q
+    accionDTablaInfo->setToolTip("Datos de bolas");              // Texto sobre el icono
+    accionDTablaInfo->setStatusTip("Datos de bolas"); // Texto en la barra de estado.
+
+    connect(accionDTablaInfo, SIGNAL(triggered()),
+            this, SLOT(slotDTablaInfo()));
+
 
     menuContextual = new QMenu("Contextual");
     menuContextual->addAction(accionDInformacion);
@@ -268,6 +280,7 @@ void MainWindow::inicializarMenus(){
     menuFichero->addAction(accionGuardarPartida);
     menuFichero->addAction(accionCargarPartida);
     menuFichero->addAction(accionDChart);
+    menuFichero->addAction(accionDTablaInfo);
 }
 
 void MainWindow::slotRepintar(){
@@ -287,7 +300,9 @@ void MainWindow::slotRepintar(){
                         int numero=random()%100;
                         if (numero<5){
                             Bola *nueva = new Bola(bolas.at(i)->posX+20, bolas.at(i)->posY-20, 
-                            ((0.1+random()%50) / 50.1) -0.5, ((0.1+random()%50) / 50.1) -0.5);
+                            ((0.1+random()%50) / 50.1) -0.5,
+                            ((0.1+random()%50) / 50.1) -0.5,
+                            QString("Bola ") + QString::number(bolas.size()));
                             nueva->padre = bolas.at(i);
                             bolas.at(i)->hijas.append(nueva);
 
@@ -401,6 +416,14 @@ void MainWindow::slotDChart(){
     dChart->show();
 }
 
+void MainWindow::slotDTablaInfo(){
+    QVector<Bola*> *punteroABolas = &bolas;
+    if (dTablaInfo == NULL)
+        dTablaInfo = new DTablaInfo(punteroABolas);
+
+    dTablaInfo->show();
+}
+
 void MainWindow::slotGuardarPartida(){
 
     QJsonObject jsonPrincipal;
@@ -484,9 +507,10 @@ void MainWindow::slotCargarPartida(){
         float posYNuevaBola = objetoBola["posY"].toDouble();
         float velXNuevaBola = objetoBola["velX"].toDouble();
         float velYNuevaBola = objetoBola["velY"].toDouble();
+        QString nuevoNombre = objetoBola["Bola "].toString();
 
         Bola * nuevaBola = new Bola(posXNuevaBola, posYNuevaBola, 
-                            velXNuevaBola, velYNuevaBola);
+                            velXNuevaBola, velYNuevaBola, nuevoNombre);
         
         QImage imagenNB;
         // Leer el elemento json y convertirlo

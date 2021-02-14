@@ -3,6 +3,7 @@
 
 #include "ui_widgetBola.h"
 #include "bola.h"
+#include <QColor>
 
 
 class WidgetBola : public QWidget, public Ui::WidgetBola{
@@ -11,12 +12,16 @@ public:
     WidgetBola(Bola *bola, QWidget *parent = 0);
 
     Bola *miBola;
+    QColor color;
 
     void dragEnterEvent(QDragEnterEvent*);
     void dropEvent(QDropEvent * event);
 
 public slots:
     void slotBotonParar();
+    void slotBotonColor();
+    void slotBotonAumentarVelocidad();
+    void slotBotonReducirVelocidad();
 };
 
 

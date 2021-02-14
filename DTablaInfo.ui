@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DChart</class>
- <widget class="QDialog" name="DChart">
+ <class>DTablaInfo</class>
+ <widget class="QDialog" name="DTablaInfo">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>984</width>
-    <height>444</height>
+    <width>797</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>400</y>
+     <x>430</x>
+     <y>500</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,20 +29,14 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QFrame" name="frameChart">
+  <widget class="QTableView" name="tableInfo">
    <property name="geometry">
     <rect>
-     <x>29</x>
-     <y>29</y>
-     <width>931</width>
-     <height>361</height>
+     <x>65</x>
+     <y>21</y>
+     <width>701</width>
+     <height>451</height>
     </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
    </property>
   </widget>
  </widget>
@@ -51,7 +45,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>DChart</receiver>
+   <receiver>DTablaInfo</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -67,7 +61,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>DChart</receiver>
+   <receiver>DTablaInfo</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -4,6 +4,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QImage>
+#include <QColorDialog>
 
 WidgetBola::WidgetBola(Bola *bolaRecibida, QWidget *parent) : QWidget(parent), miBola(bolaRecibida){
 
@@ -13,6 +14,15 @@ WidgetBola::WidgetBola(Bola *bolaRecibida, QWidget *parent) : QWidget(parent), m
 
     connect(pushButtonPararLaBola, SIGNAL(clicked()),
         this, SLOT(slotBotonParar()));
+
+    connect(pushButtonElegirColor, SIGNAL(clicked()),
+        this, SLOT(slotBotonColor()));
+
+    connect(pushButtonAumVel, SIGNAL(clicked()),
+        this, SLOT(slotBotonAumentarVelocidad()));
+
+    connect(pushButtonRedVel, SIGNAL(clicked()),
+        this, SLOT(slotBotonReducirVelocidad()));
 
     setAcceptDrops(true);
 }
@@ -44,4 +54,23 @@ void WidgetBola::dropEvent ( QDropEvent * event ){
 void WidgetBola::slotBotonParar(){
     // Parar la bola
     miBola->parar();
+}
+
+void WidgetBola::slotBotonColor(){
+    // Cambiar el color de la bola
+    QColorDialog colorDialog;
+
+    color = colorDialog.getColor();
+    qDebug() <<color;
+    miBola->cambiarColor(color);
+}
+
+void WidgetBola::slotBotonAumentarVelocidad(){
+    // Acelerar la bola
+    miBola->acelerar();
+}
+
+void WidgetBola::slotBotonReducirVelocidad(){
+    // Frenar la bola
+    miBola->frenar();
 }

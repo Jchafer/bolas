@@ -27,15 +27,15 @@ public:
     {
         if (DChart->objectName().isEmpty())
             DChart->setObjectName(QString::fromUtf8("DChart"));
-        DChart->resize(571, 417);
+        DChart->resize(984, 444);
         buttonBox = new QDialogButtonBox(DChart);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(190, 360, 341, 32));
+        buttonBox->setGeometry(QRect(620, 400, 341, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         frameChart = new QFrame(DChart);
         frameChart->setObjectName(QString::fromUtf8("frameChart"));
-        frameChart->setGeometry(QRect(49, 29, 481, 311));
+        frameChart->setGeometry(QRect(29, 29, 931, 361));
         frameChart->setFrameShape(QFrame::StyledPanel);
         frameChart->setFrameShadow(QFrame::Raised);
 
