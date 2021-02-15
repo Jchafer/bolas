@@ -20,6 +20,7 @@
 #include "dTablaInfo.h"
 #include "dTabHijas.h"
 #include "dTabDatosBolas.h"
+#include "dguardarconf.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -92,6 +93,9 @@ class MainWindow : public QMainWindow{
         DTabDatosBolas * dTabDatosBolas;         
         QAction *acciondTabDatosBolas;
 
+        DGuardarConf * dGuardarConf;
+        QAction *accionCargarConf;
+
     public slots:
         void slotRepintar();    
         void slotDInformacion();
@@ -108,7 +112,7 @@ class MainWindow : public QMainWindow{
 
         void slotGuardarPartida();
         void slotCargarPartida();
-        void slotGuardarDatos();
+        void slotGuardarDatos(int, int);
         void slotCargarDatos();
     
     signals:

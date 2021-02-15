@@ -97,8 +97,8 @@ static const uint qt_meta_data_MainWindow[] = {
       16,    0,  113,    2, 0x0a /* Public */,
       17,    0,  114,    2, 0x0a /* Public */,
       18,    0,  115,    2, 0x0a /* Public */,
-      19,    0,  116,    2, 0x0a /* Public */,
-      20,    0,  117,    2, 0x0a /* Public */,
+      19,    2,  116,    2, 0x0a /* Public */,
+      20,    0,  121,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -118,7 +118,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    2,    2,
     QMetaType::Void,
 
        0        // eod
@@ -145,7 +145,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 12: _t->slotDTablaInfo(); break;
         case 13: _t->slotGuardarPartida(); break;
         case 14: _t->slotCargarPartida(); break;
-        case 15: _t->slotGuardarDatos(); break;
+        case 15: _t->slotGuardarDatos((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 16: _t->slotCargarDatos(); break;
         default: ;
         }

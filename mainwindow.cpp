@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     dTablaInfo = NULL;
     dTabHijas = NULL;
     dTabDatosBolas = NULL;
+    dGuardarConf = NULL;
 
     drag = NULL;
 
@@ -87,7 +88,15 @@ void MainWindow::paintEvent(QPaintEvent *event){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    slotGuardarDatos();
+    //slotGuardarDatos();
+    if (dGuardarConf == NULL){
+        dGuardarConf = new DGuardarConf();
+
+        connect(dGuardarConf, SIGNAL(guardarEsto(int, int)),
+                this, SLOT(slotGuardarDatos(int, int)));
+    }
+
+    dGuardarConf->exec();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -292,6 +301,15 @@ void MainWindow::inicializarMenus(){
     connect(acciondTabDatosBolas, SIGNAL(triggered()),
             this, SLOT(slotDTabDatosBolas()));                           
 
+    accionCargarConf = new QAction("Cargar configuración", this);
+    //accionCargarConf->setIcon(QIcon("./icons/salir.png"));
+    //accionCargarConf->setShortcut(QKeySequence::Quit);  // Ctrl+Q
+    accionCargarConf->setToolTip("Cargar datos");              // Texto sobre el icono
+    accionCargarConf->setStatusTip("Cargar datos"); // Texto en la barra de estado.
+
+    connect(accionCargarConf, SIGNAL(triggered()),
+            this, SLOT(slotCargarDatos()));
+
     menuContextual = new QMenu("Contextual");
     menuContextual->addAction(accionDInformacion);
 
@@ -311,6 +329,7 @@ void MainWindow::inicializarMenus(){
     menuPrueba->addAction(accionDTablaInfo);
     menuPrueba->addAction(accionDTabHijas);
     menuPrueba->addAction(acciondTabDatosBolas);
+    menuPrueba->addAction(accionCargarConf);
 }
 
 void MainWindow::slotRepintar(){
@@ -662,15 +681,25 @@ void MainWindow::slotCargarPartida(){
     loadFile.close();
 }
 
-void MainWindow::slotGuardarDatos(){
+void MainWindow::slotGuardarDatos(int gAlto, int gAncho){
 
     QJsonObject jsonPrincipal;
 
     QJsonObject jsonDatos;
     
-    jsonDatos["alto"] = this->height();
-    jsonDatos["ancho"] = this->width();
+    //jsonDatos["alto"] = this->height();
+    //jsonDatos["ancho"] = this->width();
+    if (gAlto == 1){
+            jsonDatos["alto"] = this->height();
+    }else{
+            jsonDatos["alto"] = altoInicio;
+    }
 
+    if (gAncho == 1){
+            jsonDatos["ancho"] = this->width();
+    }else{
+            jsonDatos["ancho"] = anchoInicio;
+    }
     jsonPrincipal["configuracion"] = jsonDatos;
 
 
@@ -684,6 +713,26 @@ void MainWindow::slotGuardarDatos(){
 }
 
 void MainWindow::slotCargarDatos(){
+    QFile loadFile(QStringLiteral("saveConf.json"));
 
+    if (!loadFile.open(QIODevice::ReadOnly))
+        return;
     
+    QByteArray savedData = loadFile.readAll();
+
+    QJsonDocument readDoc(QJsonDocument::fromJson(savedData));
+    QJsonObject jsonPrincipal = readDoc.object();
+
+    if (! jsonPrincipal.contains("configuracion")){
+        qDebug() << "Problemas al cargar configuración";
+        return;
+    }
+
+    QJsonObject objetoConf = jsonPrincipal["configuracion"].toObject();
+    int alto = objetoConf["alto"].toDouble();
+    int ancho = objetoConf["ancho"].toDouble();
+
+    resize(ancho, alto);
+
+    loadFile.close();
 }
