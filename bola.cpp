@@ -74,13 +74,13 @@ void Bola::pintar(QPainter &pintor){
     else pintor.drawEllipse(posX,posY,Bola::diametro,Bola::diametro);
     
     pintor.drawText(posX - 10,
-                    posY - 10,
+                    posY + 65,
                     QString(nombre) + QString(" (") + QString::number(vida) + QString(")"));
     pintor.drawText(posX - 10,
-                    posY + 65,
+                    posY - 10,
                     QString("Col. Bola: ") + QString::number(colisiones));
     pintor.drawText(posX - 10,
-                    posY + 80,
+                    posY -30,
                     QString("Col. Pared: ") + QString::number(coliPared));
     
     /*QBrush brush(color);

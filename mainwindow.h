@@ -18,6 +18,8 @@
 #include <QChartView>
 #include "dChart.h"
 #include "dTablaInfo.h"
+#include "dTabHijas.h"
+#include "dTabDatosBolas.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -34,8 +36,13 @@ class MainWindow : public QMainWindow{
         void mousePressEvent(QMouseEvent *event);
         void mouseReleaseEvent(QMouseEvent *event);
         void mouseMoveEvent(QMouseEvent *event);
+        void closeEvent(QCloseEvent *event);
+
 
         int cantidadBolas;
+    
+        int altoInicio;
+        int anchoInicio;
 
         QDrag * drag;
 
@@ -79,6 +86,12 @@ class MainWindow : public QMainWindow{
         DTablaInfo * dTablaInfo;         
         QAction *accionDTablaInfo;
 
+        DTabHijas * dTabHijas;         
+        QAction *accionDTabHijas;
+
+        DTabDatosBolas * dTabDatosBolas;         
+        QAction *acciondTabDatosBolas;
+
     public slots:
         void slotRepintar();    
         void slotDInformacion();
@@ -88,11 +101,15 @@ class MainWindow : public QMainWindow{
         void slotDArbolBolas();
         void slotChocar();
         void slotDChart();
+        void slotDTabHijas();
+        void slotDTabDatosBolas();
 
         void slotDTablaInfo();
 
         void slotGuardarPartida();
         void slotCargarPartida();
+        void slotGuardarDatos();
+        void slotCargarDatos();
     
     signals:
         void signalNuevaBola(Bola *bola);

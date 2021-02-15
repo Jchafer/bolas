@@ -38,12 +38,12 @@ DChart::DChart(QVector<Bola*> * bolas, QWidget *parent) : QDialog(parent), bolas
     datosChart->addSeries(serie);*/
 
     axisXHorizontal = new QValueAxis;
-    axisXHorizontal->setRange(0, bolas->size()+10);
-    axisXHorizontal->setTitleText("Dias");
+    axisXHorizontal->setRange(0, 1);
+    axisXHorizontal->setTitleText("Tiempo");
 
     axisYVertical = new QValueAxis;
-    axisYVertical->setRange(0, 10);
-    axisYVertical->setTitleText("Goles");
+    axisYVertical->setRange(0, 1);
+    axisYVertical->setTitleText("Colisiones");
     
     datosChart->addAxis(axisXHorizontal, Qt::AlignBottom);
     datosChart->addAxis(axisYVertical, Qt::AlignLeft);
@@ -91,8 +91,6 @@ void DChart::slotTemporizador(){
     int totalColisiones = 0;
     static int count;
     count++;
-    static int count2 = 1;
-    count2++;
 
     for (int i = 0; i < bolasRecibidas->size(); i++){
         totalColisiones += bolasRecibidas->at(i)->colisiones; 

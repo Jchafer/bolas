@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DControlBolas</class>
- <widget class="QDialog" name="DControlBolas">
+ <class>DTabHijas</class>
+ <widget class="QDialog" name="DTabHijas">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>399</height>
+    <width>783</width>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>350</y>
-     <width>175</width>
-     <height>25</height>
+     <x>430</x>
+     <y>660</y>
+     <width>341</width>
+     <height>32</height>
     </rect>
    </property>
    <property name="orientation">
@@ -29,17 +29,14 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTabWidget" name="tabBolas">
+  <widget class="QTabWidget" name="tabWidgetHijas">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>341</width>
-     <height>221</height>
+     <width>751</width>
+     <height>611</height>
     </rect>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -52,53 +49,13 @@
     </attribute>
    </widget>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>21</x>
-     <y>259</y>
-     <width>341</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QPushButton" name="pushButtonPararBola">
-      <property name="text">
-       <string>Parar Bola</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QCheckBox" name="checkBoxPararTodas">
-      <property name="text">
-       <string>Parar todas</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButtonAumVel">
-      <property name="text">
-       <string>Aumentar Velocidad</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="pushButtonRedVel">
-      <property name="text">
-       <string>Reducir Velocidad</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>DControlBolas</receiver>
+   <receiver>DTabHijas</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -114,7 +71,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>DControlBolas</receiver>
+   <receiver>DTabHijas</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

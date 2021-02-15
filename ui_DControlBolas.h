@@ -28,7 +28,7 @@ public:
     QTabWidget *tabBolas;
     QWidget *tab;
     QWidget *tab_2;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QPushButton *pushButtonPararBola;
     QCheckBox *checkBoxPararTodas;
@@ -54,28 +54,28 @@ public:
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         tabBolas->addTab(tab_2, QString());
-        widget = new QWidget(DControlBolas);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(21, 259, 341, 81));
-        gridLayout = new QGridLayout(widget);
+        layoutWidget = new QWidget(DControlBolas);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(21, 259, 341, 81));
+        gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        pushButtonPararBola = new QPushButton(widget);
+        pushButtonPararBola = new QPushButton(layoutWidget);
         pushButtonPararBola->setObjectName(QString::fromUtf8("pushButtonPararBola"));
 
         gridLayout->addWidget(pushButtonPararBola, 0, 0, 1, 1);
 
-        checkBoxPararTodas = new QCheckBox(widget);
+        checkBoxPararTodas = new QCheckBox(layoutWidget);
         checkBoxPararTodas->setObjectName(QString::fromUtf8("checkBoxPararTodas"));
 
         gridLayout->addWidget(checkBoxPararTodas, 0, 1, 1, 1);
 
-        pushButtonAumVel = new QPushButton(widget);
+        pushButtonAumVel = new QPushButton(layoutWidget);
         pushButtonAumVel->setObjectName(QString::fromUtf8("pushButtonAumVel"));
 
         gridLayout->addWidget(pushButtonAumVel, 1, 0, 1, 1);
 
-        pushButtonRedVel = new QPushButton(widget);
+        pushButtonRedVel = new QPushButton(layoutWidget);
         pushButtonRedVel->setObjectName(QString::fromUtf8("pushButtonRedVel"));
 
         gridLayout->addWidget(pushButtonRedVel, 1, 1, 1, 1);
